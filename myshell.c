@@ -4,7 +4,7 @@
  *  Chris Nutter, CPSC 351-04
  ******************************
  *
- *  myshell.c 
+ *  myshell.c - the code for the shell 
  *
  */ 
 
@@ -30,11 +30,11 @@ char** parse_args(char*, char*);    // parses the arguments to be readable
 void help();                        // help function
 bool exec_name(char*);              // function to check compatible commands
 
+void run();			    // while loop for shell
+
 // ============================== Main ========================== //
 
 int main() {
-
-    char** args;
 
     printf("                      ______ _           _ _         \n");
     printf("                     / _____) |         | | |        \n");
@@ -46,36 +46,45 @@ int main() {
     printf("                        v1.0 - GM                    \n");  
     printf("                     For Linux only.                 \n\n"); 
     printf("    notepad (vim), vol (df), path (pwd), color (tput)  \n");
-    printf("    tasklist (top), dir (dir), echo (echo), help (help)\n\n");
+    printf("    tasklist (top), dir (dir), echo (echo), help (help)\n");
     printf("Type \'help\' for a list of commands.      \n");
-    while(1) {
-
-        printf("> ");
-        
-        fgets(buf, BUFFSIZE, stdin);    // takes input from user
-        args = parse_args(buf, " \n");  // parses input
-
-        execute(args);                  // executes input
-        free(args);                     // dealloc memory
-
-    }
+    	
+    run();
 
 }
 
 // ============================ Functions ======================== //
 
+void run() {
+
+   char** args;
+
+   while(1) {
+	
+        printf("> ");
+        
+        fgets(buf, BUFFSIZE, stdin);    // takes input from user
+	args = parse_args(buf, " \n");  // parses input
+
+        execute(args);                  // executes input
+        free(args);                     // dealloc memory
+
+    }
+}
+
 
 void execute(char* args[]) {
 
-    char* prog = args[0];
+    char* prog = args[0];   	
 
     if      (strcmp(prog, "help") == 0) { help();  }                                            // checks if arg was "help"
-    else if (strcmp(prog, "exit") == 0) { exit(0); }                                            // checks if arg was "exit"
-    else if (exec_name(prog))           { com_check = 0; output(args); }                        // resets loop checker to 0 if you finally learned how to work the program... and then outputs
+    else if (strcmp(prog, "exit") == 0) { printf("Goodbye.\n");  exit(0); }                     // checks if arg was "exit"
+    else if (strcmp(prog, "quit") == 0) { printf("Did you mean: \'exit\'?\n"); }
+    else if (exec_name(prog))           { com_check = 0; output(args); }                        // resets loop checker then outputs
     else { 
         printf("%s: command not found\n", prog);                                                // failsafe for invalid commands
         ++com_check; 
-        if(com_check >= 3) {printf("Need help? Type \'help\' for list of commands.\n\n"); }
+        if(com_check >= 3) {printf("Need help? Type \'help\' for list of commands.\n"); }
     }     
         
 }
@@ -83,65 +92,63 @@ void execute(char* args[]) {
 void output(char* args[]) {
 
     char* prog = args[0];
-
     int status;
+    
     pid_t pid = fork();         // child process
     if (pid == 0) {
 
         execvp(prog, args);     // execvp helps turn text into shell commands used by system
         exit(0);
 
-    } else { wait(&status); }   // parent process
-
+    } wait(&status);		// parent waiting
 }
 
 void help() {
 
-    printf("myShell | v0.1\n");
     printf("These shell commands are defined. Type 'help' to see this list.\n");
     printf("     dir    help   df     pwd\n" );
     printf("     top    vim    echo   tput\n");
-    printf("     ping\n"                    );
+    printf("     ping\n"                     );
 
 }
 
 char** parse_args(char* buf, char* delim) {
 
-	char** args = malloc(sizeof(char*));
+    int length = 0;
+    char* str;
 
-	int len = 0;
-	char* str;
+    str = strtok(buf, delim);
 
-	args[len] = NULL;
-	str = strtok(buf, delim);
+    if (!str) { run(); }
+    char** args = malloc(sizeof(char*));
 
-	while(str) {
+    args[length] = NULL;
 
-		char** temp;
+    while(str) {
 
-		args[len] = str;
-		++len;
+	args[length] = str;
+	++length;
 
-		temp = reallocarray(args, len + 1, sizeof(char*));  
-        args = temp;
+	args = reallocarray(args, length+1, sizeof(char*));  
 		
-		args[len] = NULL;
-		str = strtok(NULL, delim);
+	args[length] = NULL;
+	str = strtok(NULL, delim);
 
-	}
+    }
     return args;
 }
 
 bool exec_name(char* prog) {
 
-    if (strcmp(prog, "dir")      == 0) { return true; }
-    if (strcmp(prog, "df")       == 0) { return true; }
-    if (strcmp(prog, "pwd")      == 0) { return true; }
-    if (strcmp(prog, "top") == 0) { return true; }
+    if (strcmp(prog, "dir")  == 0) { return true; }
+    if (strcmp(prog, "df")   == 0) { return true; }
+    if (strcmp(prog, "pwd")  == 0) { return true; }
+    if (strcmp(prog, "top")  == 0) { return true; }
     if (strcmp(prog, "vim")  == 0) { return true; }
-    if (strcmp(prog, "echo")     == 0) { return true; }
-    if (strcmp(prog, "tput")    == 0) { return true; }
-    if (strcmp(prog, "ping")     == 0) { return true; }
+    if (strcmp(prog, "echo") == 0) { return true; }
+    if (strcmp(prog, "tput") == 0) { return true; }
+    if (strcmp(prog, "ping") == 0) { return true; }
     return false;
 
 }
+
