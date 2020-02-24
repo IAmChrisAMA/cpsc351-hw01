@@ -2,20 +2,25 @@
 #include <string.h>
 #include <sys/types.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <unistd.h>
 
-#define BUFFSIZE 1000
+// ========================= Early Iterations =================== //
 
+#define BUFFSIZE 100
 
 char buf[BUFFSIZE];
 int  com_check = 0;
 
 void execute(char**);
 char** parse_args(char*, char*);
+void output(char**);
+bool funcname(char*);
 
-void dir(int, char**);
+//void dir(int, char**);
 void help();
 
+// ============================== Main ========================== //
 
 int main() {
 
@@ -26,49 +31,58 @@ int main() {
 
     while(1) {
 
-        printf("~> ");
-        //char input;
+        printf("> ");
+        
         fgets(buf, BUFFSIZE, stdin);
         args = parse_args(buf, " \n");
 
         execute(args);        
-        //free(args);
+        free(args);
 
     }
 
 }
 
-void execute(char** args) {
+// ============================ Functions ======================== //
 
-    pid_t pid = fork();
+
+void execute(char* args[]) {
+
     char* prog = args[0];
 
-    if      (strcmp(prog, "help") == 0)             { help(); }
-    else if (pid == 0 && strcmp(prog, "exit") == 0) { exit(0); }
-    else if (pid == 0 && strcmp(prog, "dir")  == 0) { dir(prog, args); }
+    if      (strcmp(prog, "help") == 0) { help();  }
+    else if (strcmp(prog, "exit") == 0) { exit(0); }
+    else if (funcname(prog) == true)        { com_check = 0; output(args); }
     else { 
         printf("%s: command not found\n", prog);
         ++com_check; 
-        if(com_check >= 3) {printf("Need help? Type \'help\' for list of commands.\n"); }
+        if(com_check >= 3) {printf("Need help? Type \'help\' for list of commands.\n\n"); }
     }
 
 }
 
+void output(char* args[]) {
 
-void help() {
+    char prog = args[0];
 
-    printf("myShell help output, version v0.1\n");
-    printf("These shell commands are defined. Type 'help' to see this list.\n");
-    printf("dir       help      vol     path\n");
-    printf("tasklist  notepad   echo    color\n");
-    printf("ping\n");
+    int status;
+    pid_t pid = fork();
+    if (pid == 0) {
+
+        execvp(prog, args);
+        exit(0);
+
+    } else { wait(&status); }
 
 }
 
-void dir(int argc, char* argv[]) {
+void help() {
 
-    if(argc == 0) { execvp(argv[0], argv); }
-    else          { /*TODO*/ return; }
+    printf("myShell | v0.1\n");
+    printf("These shell commands are defined. Type 'help' to see this list.\n");
+    printf("     dir        help      vol     path\n" );
+    printf("     tasklist   notepad   echo    color\n");
+    printf("     ping\n"                              );
 
 }
 
@@ -88,6 +102,7 @@ char** parse_args(char* buf, char* delim) {
 
 		args[len] = str;
 		++len;
+
 		temp = reallocarray(args, len + 1, sizeof(char*));
         
 		args = temp;
@@ -96,4 +111,19 @@ char** parse_args(char* buf, char* delim) {
 		str = strtok(NULL, delim);
 
 	}
+    return args;
+}
+
+bool funcname(char* prog) {
+
+    if (strcmp(prog, "dir") == 0)      { return true; }
+    if (strcmp(prog, "vol") == 0)      { return true; }
+    if (strcmp(prog, "path") == 0)     { return true; }
+    if (strcmp(prog, "tasklist") == 0) { return true; }
+    if (strcmp(prog, "notepad") == 0)  { return true; }
+    if (strcmp(prog, "echo") == 0)     { return true; }
+    if (strcmp(prog, "color") == 0)    { return true; }
+    if (strcmp(prog, "ping") == 0)     { return true; }
+    return false;
+
 }
