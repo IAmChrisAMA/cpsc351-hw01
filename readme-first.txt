@@ -57,7 +57,7 @@ Other:
 	report back to myShell.
 
 
-Documentation Setup:
+Contents:
 
 	myshell 	      -- The executable for myshell
 	
