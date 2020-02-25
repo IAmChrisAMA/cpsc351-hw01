@@ -30,7 +30,7 @@ char** parse_args(char*, char*);    // parses the arguments to be readable
 void help();                        // help function
 bool exec_name(char*);              // function to check compatible commands
 
-void run();			    // while loop for shell
+void run();			                // while loop for shell
 
 // ============================== Main ========================== //
 
@@ -46,10 +46,10 @@ int main() {
     printf("                        v1.0 - GM                    \n");  
     printf("                     For Linux only.                 \n\n"); 
     printf("    notepad (vim), vol (df), path (pwd), color (tput)  \n");
-    printf("    tasklist (top), dir (dir), echo (echo), help (help)\n");
+    printf("    tasklist (top), dir (dir), echo (echo), help (help)\n\n");
     printf("Type \'help\' for a list of commands.      \n");
     	
-    run();
+    run(); // here we go
 
 }
 
@@ -64,7 +64,7 @@ void run() {
         printf("> ");
         
         fgets(buf, BUFFSIZE, stdin);    // takes input from user
-	args = parse_args(buf, " \n");  // parses input
+        args = parse_args(buf, " \n");  // parses input
 
         execute(args);                  // executes input
         free(args);                     // dealloc memory
@@ -100,7 +100,7 @@ void output(char* args[]) {
         execvp(prog, args);     // execvp helps turn text into shell commands used by system
         exit(0);
 
-    } wait(&status);		// parent waiting
+    } wait(&status);		    // parent waiting
 }
 
 void help() {
@@ -126,13 +126,13 @@ char** parse_args(char* buf, char* delim) {
 
     while(str) {
 
-	args[length] = str;
-	++length;
+        args[length] = str;
+        ++length;
 
-	args = reallocarray(args, length+1, sizeof(char*));  
+        args = reallocarray(args, length+1, sizeof(char*));
 		
-	args[length] = NULL;
-	str = strtok(NULL, delim);
+        args[length] = NULL;
+        str = strtok(NULL, delim);
 
     }
     return args;

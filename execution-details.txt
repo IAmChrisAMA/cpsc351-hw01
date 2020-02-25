@@ -1,0 +1,30 @@
+This program is pretty straight forward. Nothing especially unique.
+
+The main runs a basic introduction with some changes between Windows and Linux then goes to run().
+
+run() is the while loop, that constantly runs (until ‘exit’ is typed). The while loop uses
+gets to check the input through 'stdin' and stores it into a buffer. Then the arguments
+are parsed through parse_args().
+
+parse_args() runs a check of what is inputed and gives proper protocol for what is readable for
+extra arguments as well. (I.e. '$ echo hello' will still output hello). Afterwards the function
+execute() will run.
+
+execute() actually takes the arguments and deciphers what the user is attempting to run. (help,
+exit, dir, etc). If 'help' is run, it goes to help() where it outputs available commands.  
+'exit' will then just exit the program with "Goodbye.". If any other (available) command is given
+it will jump to exec_name().
+
+exec_name() checks if the command given is appropriate. will then return true if it is, false if not.
+
+If exec_name() returns false, execute() will output command not found and add com_check.
+
+com_check checks if the user gave a false command 3 times in a row. If it did, then it will
+ask if you need help.
+
+If the command is not within the realm required, it will then print command not found and reset back to normal. If it is within the realm, it will then move to output() sending the arguments.
+
+output() then takes the arguments and executing them. output() uses execvp to output text into real commands. This step is interesting because theoretically if I allowed more commands (for example 'touch') they would work. It just parses the command text then outputs. Once finished it then exits output(), then de-allocates memory.
+
+The while loop then resets.
+
