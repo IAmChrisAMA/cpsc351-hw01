@@ -36,16 +36,16 @@ void run();			                // while loop for shell
 
 int main() {
 
-    printf("                      ______ _           _ _         \n");
-    printf("                     / _____) |         | | |        \n");
-    printf("         ____  _   _( (____ | |__  _____| | |        \n");
-    printf("         |    \\| | | |\\____ \\|  _ \\| ___ | | |   \n");
-    printf("         | | | | |_| |_____) ) | | | ____| | |       \n");
-    printf("         |_|_|_|\\__  (______/|_| |_|_____)\\_)_)    \n");
-    printf("               (____/                                \n\n");
-    printf("                        v1.0 - GM                    \n");  
-    printf("                     For Linux only.                 \n\n"); 
-    printf("    notepad (vim), vol (df), path (pwd), color (tput)  \n");
+    printf("                       ______ _           _ _            \n");
+    printf("                      / _____) |         | | |           \n");
+    printf("          ____  _   _( (____ | |__  _____| | |           \n");
+    printf("         |    \\| | | |\\____ \\|  _ \\| ___ | | |       \n");
+    printf("         | | | | |_| |_____) ) | | | ____| | |           \n");
+    printf("         |_|_|_|\\__  (______/|_| |_|_____)\\_)_)        \n");
+    printf("               (____/                                  \n\n");
+    printf("                        v1.0 - GM                        \n");  
+    printf("                     For Linux only.                   \n\n"); 
+    printf("    notepad (vim), vol (df), path (pwd), color (tput)    \n");
     printf("    tasklist (top), dir (dir), echo (echo), help (help)\n\n");
     printf("Type \'help\' for a list of commands.      \n");
     	
