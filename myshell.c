@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <unistd.h>
@@ -100,7 +101,7 @@ void output(char* args[]) {
         execvp(prog, args);     // execvp helps turn text into shell commands used by system
         exit(0);
 
-    } wait(&status);		    // parent waiting
+    } else { wait(&status); }   // parent waiting
 }
 
 void help() {
